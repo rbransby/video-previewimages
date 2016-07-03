@@ -1,0 +1,60 @@
+<!-- <link rel="import" href="../polymer/polymer.html"> -->
+<link rel="import" href="bower_components/polymer/polymer.html">
+
+<dom-module id="video-previewimages">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+
+      canvas {
+        display:block;
+      }
+    </style>
+    <video>
+      <source src="{{videoSrc}}"></source>
+    </video>
+    <canvas></canvas>
+  </template>
+
+  <script>
+    (function (Polymer) {
+      'use strict';
+      class VideoPreviewimages {
+        beforeRegister() {
+          this.is = 'video-previewimages';
+
+          this.properties = {
+            videoSrc: {
+              type: String,
+              notify: true,
+              value: 'C:\\Users\\Rob\\Downloads\\Red Squall EspR109012015.mp4'
+            }
+          };
+        }
+
+        attached() {
+        }
+
+        getImage() {
+          let video = this.$$('video');
+          let canvas = this.$$('canvas');
+
+          ctx = c.getContext('2d');
+
+          ctx.fillStyle = 'rgb(0, 0, 0)';
+          ctx.drawImage(v);
+          ctx.font = '20px Calibri';
+          ctx.fillStyle = 'lime';
+          let time = format(v.currentTime);
+          ctx.fillStyle = 'white';
+          ctx.fillText(time, 395 - ctx.measureText(time).width, 20);
+
+        }
+      }
+
+      Polymer(VideoPreviewimages);
+    })(Polymer);
+  </script>
+</dom-module>
