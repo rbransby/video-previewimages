@@ -1,6 +1,19 @@
-<!-- <link rel="import" href="../polymer/polymer.html"> -->
-<link rel="import" href="bower_components/polymer/polymer.html">
+<!--
+@license
+Copyright (c) 2015 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
 
+<link rel="import" href="../polymer/polymer.html">
+
+<!--
+  An element for extracting preview images from a video file
+  @demo demo/index.html
+-->
 <dom-module id="video-previewimages">
   <template>
     <style>
@@ -12,49 +25,40 @@
         display:block;
       }
     </style>
-    <video>
-      <source src="{{videoSrc}}"></source>
+    <video src="{{videoSrc}}" controls>
+      
     </video>
     <canvas></canvas>
   </template>
 
-  <script>
-    (function (Polymer) {
-      'use strict';
-      class VideoPreviewimages {
-        beforeRegister() {
-          this.is = 'video-previewimages';
-
-          this.properties = {
-            videoSrc: {
-              type: String,
-              notify: true,
-              value: 'C:\\Users\\Rob\\Downloads\\Red Squall EspR109012015.mp4'
-            }
-          };
+<script>
+    Polymer({
+      is: 'video-previewimages',
+      properties: {
+        videoSrc: {
+          type: String,
+          notify: true
         }
+      },
 
-        attached() {
-        }
+      getImage: function() {
+        let video = this.$$('video');
+        let canvas = this.$$('canvas');
 
-        getImage() {
-          let video = this.$$('video');
-          let canvas = this.$$('canvas');
+        ctx = canvas.getContext('2d');
 
-          ctx = c.getContext('2d');
+        ctx.fillStyle = 'rgb(0, 0, 0)';
+        ctx.drawImage(video,0,0);
+        ctx.font = '20px Calibri';
+        ctx.fillStyle = 'lime';
+        //let time = format(video.currentTime);
+        ctx.fillStyle = 'white';
+        //ctx.fillText(time, 395 - ctx.measureText(time).width, 20);
 
-          ctx.fillStyle = 'rgb(0, 0, 0)';
-          ctx.drawImage(v);
-          ctx.font = '20px Calibri';
-          ctx.fillStyle = 'lime';
-          let time = format(v.currentTime);
-          ctx.fillStyle = 'white';
-          ctx.fillText(time, 395 - ctx.measureText(time).width, 20);
-
-        }
       }
 
-      Polymer(VideoPreviewimages);
-    })(Polymer);
-  </script>
+    });
+
+</script>
+
 </dom-module>
