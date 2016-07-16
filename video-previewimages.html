@@ -25,10 +25,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         display:block;
       }
     </style>
-    <video style="display:none" src="{{videoSrc}}" controls>
+    <video width="640" height="480" style="display:none" src="{{videoSrc}}">
 
     </video>
-    <canvas></canvas>
+    <canvas width="640" height="480" style="display:none"></canvas>
   </template>
 
 <script>
@@ -38,23 +38,47 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         videoSrc: {
           type: String,
           notify: true
+        },
+        imageUrls: {
+          type: Array,
+          value: [],
+          notify: true
         }
       },
 
-      getImage: function() {
+      getRandomImages: function(numberOfImages) {
         let video = this.$$('video');
         let canvas = this.$$('canvas');
 
-        ctx = canvas.getContext('2d');
-
-        ctx.fillStyle = 'rgb(0, 0, 0)';
-        ctx.drawImage(video,0,0);
-        ctx.font = '20px Calibri';
-        ctx.fillStyle = 'lime';
-        //let time = format(video.currentTime);
-        ctx.fillStyle = 'white';
         //ctx.fillText(time, 395 - ctx.measureText(time).width, 20);
+        for (let i = 0; i<numberOfImages; i++)
+        {
+          video.currentTime = Math.floor(Math.random() * video.duration);
+          let ctx = canvas.getContext('2d');
+          ctx.fillStyle = 'rgb(0, 0, 0)';
 
+          ctx.font = '20px Calibri';
+          ctx.fillStyle = 'lime';
+          //let time = format(video.currentTime);
+          ctx.fillStyle = 'white';
+          ctx.drawImage(video,0,0);
+          canvas.toBlob((blob) => {
+            this.imageUrls.push(URL.createObjectURL(blob));
+          });
+        }
+
+      //   canvas.toBlob(function(blob) {
+      //   var newImg = document.createElement("img"),
+      //       url = URL.createObjectURL(blob);
+      //
+      //   newImg.onload = function() {
+      //     // no longer need to read the blob so it's revoked
+      //     URL.revokeObjectURL(url);
+      //   };
+      //
+      //   newImg.src = url;
+      //   document.body.appendChild(newImg);
+      // });
       }
 
     });

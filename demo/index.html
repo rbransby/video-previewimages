@@ -9,31 +9,43 @@
     <link rel="import" href="../../iron-demo-helpers/demo-pages-shared-styles.html">
     <link rel="import" href="../../iron-demo-helpers/demo-snippet.html">
     <link rel="import" href="../video-previewimages.html">
+    <link rel="import" href="../../iron-image/iron-image.html">
 
     <style is="custom-style" include="demo-pages-shared-styles">
     </style>
   </head>
   <body>
-
+    <template id="scope" is="dom-bind">
     <div class="vertical-section-container centered">
       <h3>Basic video-previewimages Demo</h3>
       <demo-snippet>
 
           <input id="demoInput" type="file" accept="video/*"></input>
-          <video-previewimages id="videoPreviewImages"></video-previewimages>
+          <video-previewimages id="videoPreviewImages" image-urls="{{imageUrls}}"></video-previewimages>
+          <div id="images">
+
+              <template is="dom-repeat" items="{{imageUrls}}" index-as="index">
+                <iron-image src="{{item}}" preload sizing="cover"></iron-image>
+              </template>
+
+          </div>
 
       </demo-snippet>
     </div>
+    </template>
     <script>
-    (function() {
+    var scope = document.querySelector('#scope');
+    // The dom-change event signifies when the template has stamped its DOM.
+    scope.addEventListener('dom-change', function() {
       var input = document.getElementById('demoInput');
       input.onchange = function(e) {
         var file = e.target.files[0];
         var fileURL = window.URL.createObjectURL(file)
         var videoPreviewImages =document.getElementById('videoPreviewImages');
         videoPreviewImages.videoSrc = fileURL;
-      }
-    })();
+      };
+    });
+    
     </script>
 
   </body>
