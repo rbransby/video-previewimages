@@ -39,7 +39,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           type: String,
           notify: true
         },
-        imageUrls: {
+        imageBlobs: {
           type: Array,
           value: [],
           notify: true
@@ -49,36 +49,54 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       getRandomImages: function(numberOfImages) {
         let video = this.$$('video');
         let canvas = this.$$('canvas');
-
         //ctx.fillText(time, 395 - ctx.measureText(time).width, 20);
+        var promise = Promise.resolve();
         for (let i = 0; i<numberOfImages; i++)
         {
-          video.currentTime = Math.floor(Math.random() * video.duration);
-          let ctx = canvas.getContext('2d');
-          ctx.fillStyle = 'rgb(0, 0, 0)';
-
-          ctx.font = '20px Calibri';
-          ctx.fillStyle = 'lime';
-          //let time = format(video.currentTime);
-          ctx.fillStyle = 'white';
-          ctx.drawImage(video,0,0);
-          canvas.toBlob((blob) => {
-            this.imageUrls.push(URL.createObjectURL(blob));
+          promise = promise.then(() => {
+            return this._setVideoTimePromise(video, Math.floor(Math.random() * video.duration));
+          })
+          .then(() => {
+            let ctx = canvas.getContext('2d');
+            ctx.fillStyle = 'rgb(0, 0, 0)';
+            ctx.font = '20px Calibri';
+            ctx.drawImage(video,0,0);
+            return this._canvasToBlobPromise(canvas);
+          })
+          .then((blob) => {
+            this.push('imageBlobs', blob);
           });
+          // .then(() => {
+          //   this._captureVideoSnapshot(canvas, video);
+          // });
         }
+      },
 
-      //   canvas.toBlob(function(blob) {
-      //   var newImg = document.createElement("img"),
-      //       url = URL.createObjectURL(blob);
-      //
-      //   newImg.onload = function() {
-      //     // no longer need to read the blob so it's revoked
-      //     URL.revokeObjectURL(url);
-      //   };
-      //
-      //   newImg.src = url;
-      //   document.body.appendChild(newImg);
-      // });
+      _captureVideoSnapshot: function(canvas, video) {
+        let ctx = canvas.getContext('2d');
+        ctx.fillStyle = 'rgb(0, 0, 0)';
+
+        ctx.font = '20px Calibri';
+        ctx.drawImage(video,0,0);
+        // this._canvasToBlobPromise(canvas).then((blob) => {
+        //   this.imageUrls.push(URL.createObjectURL(blob));
+        // });
+        this.push('imageUrls', canvas.toDataURL());
+      },
+      _setVideoTimePromise: function(video, currentTime) {
+        return new Promise((resolve, reject) => {
+          video.oncanplay = function() {
+            resolve();
+          };
+          video.currentTime = currentTime;
+        })
+      },
+      _canvasToBlobPromise: function(canvas) {
+        return new Promise((resolve, reject) => {
+          canvas.toBlob((blob) => {
+            resolve(blob);
+          });
+        });
       }
 
     });

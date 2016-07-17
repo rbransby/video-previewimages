@@ -21,11 +21,11 @@
       <demo-snippet>
 
           <input id="demoInput" type="file" accept="video/*"></input>
-          <video-previewimages id="videoPreviewImages" image-urls="{{imageUrls}}"></video-previewimages>
+          <video-previewimages id="videoPreviewImages" image-blobs="{{imageBlobs}}"></video-previewimages>
           <div id="images">
 
-              <template is="dom-repeat" items="{{imageUrls}}" index-as="index">
-                <iron-image src="{{item}}" preload sizing="cover"></iron-image>
+              <template is="dom-repeat" items="{{imageBlobs}}" index-as="index">
+                <iron-image src="{{getBlobUrl(item)}}" width="640" height="480"></iron-image>
               </template>
 
           </div>
@@ -35,6 +35,9 @@
     </template>
     <script>
     var scope = document.querySelector('#scope');
+    scope.getBlobUrl = function(blob) {
+      return URL.createObjectURL(blob);
+    }
     // The dom-change event signifies when the template has stamped its DOM.
     scope.addEventListener('dom-change', function() {
       var input = document.getElementById('demoInput');
@@ -45,7 +48,8 @@
         videoPreviewImages.videoSrc = fileURL;
       };
     });
-    
+
+
     </script>
 
   </body>
