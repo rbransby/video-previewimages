@@ -25,7 +25,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         display:block;
       }
     </style>
-    <video width="640" height="480" style="display:none" src="{{videoSrc}}">
+    <video width="640" height="480" style="display:none">
 
     </video>
     <canvas width="640" height="480" style="display:none"></canvas>
@@ -100,7 +100,19 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         });
       },
       _videoSrcChanged: function() {
-        this.getRandomImages(3);
+        this._setVideoSrcPromise(this.$$('video'), this.videoSrc).then(() => {
+          this.getRandomImages(3);
+        });
+      },
+
+      _setVideoSrcPromise: function(video, src)
+      {
+        return new Promise((resolve, reject) => {
+          video.oncanplay = function() {
+            resolve();
+          };
+          video.src = src;
+        })
       }
 
     });
