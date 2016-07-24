@@ -37,7 +37,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       properties: {
         videoSrc: {
           type: String,
-          notify: true
+          notify: true,
+          observer: '_videoSrcChanged'
         },
         imageBlobs: {
           type: Array,
@@ -97,6 +98,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             resolve(blob);
           });
         });
+      },
+      _videoSrcChanged: function() {
+        this.getRandomImages(3);
       }
 
     });
