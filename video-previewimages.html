@@ -25,10 +25,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         display:block;
       }
     </style>
-    <video width="{{width}}" height="{{height}}" style="display:none">
+    <video width="{{width}}" height="{{height}}" >
 
     </video>
-    <canvas width="{{width}}" height="{{height}}" style="display:none"></canvas>
+    <canvas width="{{width}}" height="{{height}}" ></canvas>
   </template>
 
 <script>
@@ -69,7 +69,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             let ctx = canvas.getContext('2d');
             ctx.fillStyle = 'rgb(0, 0, 0)';
             ctx.font = '20px Calibri';
-            ctx.drawImage(video,0,0);
+            // we might have to adjust the height, as if the ratio is borked then it will be letterboxed in the video. In this case we then want to ensure we are only drawing actual video footage
+            var ratio = video.videoHeight / video.videoWidth
+            let actualHeight = this.width * ratio;
+            ctx.drawImage(video,0,0, this.width, actualHeight);
             return this._canvasToBlobPromise(canvas);
           })
           .then((blob) => {

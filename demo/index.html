@@ -21,11 +21,11 @@
       <demo-snippet>
 
           <input id="demoInput" type="file" accept="video/*"></input>
-          <video-previewimages id="videoPreviewImages" image-blobs="{{imageBlobs}}"></video-previewimages>
+          <video-previewimages width="320" height="240" id="videoPreviewImages" image-blobs="{{imageBlobs}}"></video-previewimages>
           <div id="images">
 
               <template is="dom-repeat" items="{{imageBlobs}}" index-as="index">
-                <iron-image src="{{getBlobUrl(item)}}" width="640" height="480"></iron-image>
+                <iron-image style="display:block" src="{{getBlobUrl(item)}}" width="320" height="240"></iron-image>
               </template>
 
           </div>
