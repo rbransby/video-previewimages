@@ -25,10 +25,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         display:block;
       }
     </style>
-    <video width="640" height="480" style="display:none">
+    <video width="{{width}}" height="{{height}}" style="display:none">
 
     </video>
-    <canvas width="640" height="480" style="display:none"></canvas>
+    <canvas width="{{width}}" height="{{height}}" style="display:none"></canvas>
   </template>
 
 <script>
@@ -43,6 +43,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         imageBlobs: {
           type: Array,
           value: [],
+          notify: true
+        },
+        width: {
+          type: Number,
+          notify: true
+        },
+        height: {
+          type: Number,
           notify: true
         }
       },
