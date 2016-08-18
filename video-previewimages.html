@@ -25,10 +25,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         display:block;
       }
     </style>
-    <video width="{{width}}" height="{{height}}" style="display:none">
+    <video style="display:none">
 
     </video>
-    <canvas width="{{width}}" height="{{height}}" style="display:none"></canvas>
+    <canvas width="{{_width}}" height="{{_height}}" style="display:none"></canvas>
   </template>
 
 <script>
@@ -45,13 +45,17 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           value: [],
           notify: true
         },
-        width: {
+        _width: {
           type: Number,
           notify: true
         },
-        height: {
+        _height: {
           type: Number,
           notify: true
+        },
+        desiredWidth: {
+          type: Number,
+          notify:true
         }
       },
 
@@ -69,10 +73,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             let ctx = canvas.getContext('2d');
             ctx.fillStyle = 'rgb(0, 0, 0)';
             ctx.font = '20px Calibri';
-            // we might have to adjust the height, as if the ratio is borked then it will be letterboxed in the video. In this case we then want to ensure we are only drawing actual video footage
-            var ratio = video.videoHeight / video.videoWidth
-            let actualHeight = this.width * ratio;
-            ctx.drawImage(video,0,0, this.width, actualHeight);
+            ctx.drawImage(video,0,0, this._width, this._height);
             return this._canvasToBlobPromise(canvas);
           })
           .then((blob) => {
@@ -112,6 +113,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       },
       _videoSrcChanged: function() {
         this._setVideoSrcPromise(this.$$('video'), this.videoSrc).then(() => {
+          let video = this.$$('video');
+          this._width = video.videoWidth;
+          this._height = video.videoHeight;
           this.getRandomImages(3);
         });
       },
